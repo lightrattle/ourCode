@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>商城-收藏</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <link rel="stylesheet" href="../res/layui/css/layui.css">
+  <link rel="stylesheet" href="../res/static/css/index.css">
+</head>
+<body class="user">
+
+<div class="house-header">
+  <div class="layui-container">
+    <div class="house-nav">
+      <span class="layui-breadcrumb" lay-separator="|">
+        <a id="nickname">登录</a>
+        <a href="../../logout">退出登录</a>
+      </span>
+    </div> 
+    <div class="house-banner layui-form">
+      <a class="banner" href="index.html">
+        <img src="../res/static/img/banner.png" alt="商城">
+      </a>
+      <div class="layui-input-inline">
+      </div>
+    </div>
+    <ul class="layui-nav close">
+      <li class="layui-nav-item"><a href="index.html">首页</a></li>
+      <li class="layui-nav-item layui-this"><a href="user.html">我的</a></li>
+      <li class="layui-nav-item"><a href="list.html">商城</a></li>
+      <li class="layui-nav-item"><a href="usershop.html">购物车</a></li>
+    </ul>
+    <button id="switch">
+      <span></span><span class="second"></span><span class="third"></span>
+    </button>
+  </div>
+</div>
+
+<div class="layui-container house-usercol userpublic">
+  <div class="layui-row layui-col-space20">
+    <div class="layui-col-sm2">
+      <ul class="user-list">
+        <li><a href="user.html">个人中心</a></li>
+        <li><a href="useradd.html">地址管理</a></li>
+        <li class="active"><a href="usercol.html">我的收藏</a></li>
+      </ul>
+    </div>
+    <div class="layui-col-sm10">
+      <div class="layui-tab layui-tab-brief">
+        <ul class="layui-tab-title">
+          <li class="layui-this">我的收藏</li>
+        </ul>
+        <div class="layui-tab-content layui-row layui-col-space30" id="collect">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="house-footer">
+  <div class="layui-container">
+    <div class="intro">
+      <span class="first"><i class="layui-icon layui-icon-house-shield"></i>7天无理由退换货</span>
+      <span class="second"><i class="layui-icon layui-icon-house-car"></i>满99元全场包邮</span>
+      <span class="third"><i class="layui-icon layui-icon-house-diamond"></i>100%品质保证</span>
+      <span class="last"><i class="layui-icon layui-icon-house-tel"></i>客服000-0000-000</span>
+    </div>
+    <div class="about">
+      <span class="layui-breadcrumb" lay-separator="|">
+        <a href="about.html">关于我们</a>
+        <a href="about.html">帮助中心</a>
+        <a href="about.html">售后服务</a>
+        <a href="about.html">配送服务</a>
+        <a href="about.html">关于货源</a>
+      </span>
+      <p>©Web-大作业</p>
+    </div>   
+  </div>
+</div>
+
+<script src="../res/layui/layui.js"></script>
+<!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
+<!--[if lt IE 9]>
+  <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+  <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
+<script src="../res/static/js/nickname.js"></script>
+<script>
+  data()
+  function data(){
+    layui.define(['element', 'carousel', 'table', 'util'], function(exports){
+      var $ = layui.$;
+      $.post('../../listCollect', function(product) {
+        console.log(product);
+        $("#collect").html("");
+        product.forEach(function(item){//显示每个商品
+          var price;
+          if(item.discountPrice==null){
+            price = item.price;
+          }else{
+            price = item.discountPrice;
+          }
+          var newText =
+                  "<div class='layui-col-xs3'>"
+                  +"<div class='goods'>"
+                  + "<img src='../../img/"+ item.productImage +"'/>"
+                  + "<p>"+"<a href='detail.html?productId="+ item.productId +"'>"+ item.productName +"</a></p>"
+                  + "<p class='price'>"+price+"</p>"
+                  + "<span class='del' onclick='delColl("+item.productId+")'>&times;</span>"
+                  + "</div></div>";
+          $("#collect").html($("#collect").html()+newText)
+        });
+      });
+    });
+  }
+  function delColl(productId){
+      layui.define(['element', 'carousel', 'table', 'util'], function(exports) {
+          var $ = layui.$;
+          $.ajax({
+              url: "/removeCollect",
+              data: {productId: productId},
+              success: function (res) {
+                  data()
+              }
+          });
+      })
+  }
+  layui.config({
+    base: '../res/static/js/' 
+  }).use('house'); 
+</script>
+
+</body>
+</html>

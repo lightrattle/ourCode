@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>商城-结算</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="../res/layui/css/layui.css">
+    <link rel="stylesheet" href="../res/static/css/index.css">
+</head>
+<body>
+
+<div class="house-header">
+    <div class="layui-container">
+        <div class="house-nav">
+      <span class="layui-breadcrumb" lay-separator="|">
+        <a id="nickname">登录</a>
+        <a href="../../logout">退出登录</a>
+      </span>
+        </div>
+        <div class="house-banner layui-form">
+            <a class="banner" href="index.html">
+                <img src="../res/static/img/banner.png" alt="商城">
+            </a>
+            <div class="layui-input-inline">
+            </div>
+        </div>
+        <ul class="layui-nav close">
+            <li class="layui-nav-item"><a href="index.html">首页</a></li>
+            <li class="layui-nav-item"><a href="user.html">我的</a></li>
+            <li class="layui-nav-item"><a href="list.html">商城</a></li>
+            <li class="layui-nav-item layui-this"><a href="usershop.html">购物车</a></li>
+        </ul>
+        <button id="switch">
+            <span></span><span class="second"></span><span class="third"></span>
+        </button>
+    </div>
+</div>
+
+<div class="layui-container house-usershop">
+    <table id="address-table" lay-filter="address-table"></table>
+    <br>
+    <div style="width: 100%;text-align: center">
+        &emsp;&emsp;支付方式：&emsp;<input type="radio" checked value="在线支付">&emsp;在线支付
+    </div>
+    <br>
+    <br>
+    <div style="width: 100%;text-align: right">
+        <button id="batchBuy" class="layui-btn" >去支付</button>
+    </div>
+    <br>
+    <br>
+
+    <script src="../res/layui/layui.js"></script>
+    <script>
+        var datas = 0;
+        layui.use(['table','jquery'], function(){
+            var table = layui.table;
+            var $ = layui.jquery
+            //第一个实例
+            table.render({
+                elem: '#address-table'
+                ,skin: "line"
+                ,url: '/user/address/listPageAddress' //数据接口
+                ,page: true //开启分页
+                ,cols: [[ //表头
+                    {type:'radio',field: 'address_id', width:'10%',  fixed: 'left'}
+                    ,{field: 'name',    title : '收货人'}
+                    ,{field: 'phone_number', title: '手机号', width:'25%'}
+                    ,{title : '地址',width : '50%',templet : function(val) {
+                            return val.province+val.city+val.county+val.address_detail;}}
+                ]]
+            });
+
+            table.on('radio(address-table)', function(obj){
+                datas = obj.data.address_id;
+            });
+            $("#batchBuy").click(function(){
+
+                if(datas==0){
+                    layer.msg("请选择地址")
+                    return
+                }
+                if(getQueryVariable("type")==1) {
+                    //购物车
+                    $.post('/user/emptyShoppingcart', {
+                        productIds: getQueryVariable("productIds"),
+                        productNums: getQueryVariable("productNums"),
+                        addressId: datas
+                    }, function (flag) {
+                        if (flag == true) {
+                            layer.msg('购买成功');
+                            window.location.href = "postMoneySuccess.html"
+                        } else {
+                            layer.msg("商品数量不足");
+                        }
+                    });
+                }else{
+                    //直接购买
+                    $.post('/user/immediateBuy', {'addressId':datas,'productId':getQueryVariable("productIds"),'productNum':getQueryVariable("productNums")} , function(flag) {
+                        if(flag == true){
+                            layer.msg('购买成功');
+                            window.location.href = "postMoneySuccess.html"
+                        }else{
+                            layer.msg("商品数量不足");
+                        }
+                    });
+                }
+            })
+        });
+        function getQueryVariable(variable)
+        {
+            var query = window.location.search.substring(1);
+            var vars = query.split("&");
+            for (var i=0;i<vars.length;i++) {
+                var pair = vars[i].split("=");
+                if(pair[0] == variable){return pair[1];}
+            }
+            return(false);
+        }
+    </script>
+</div>
+
+<div class="house-footer">
+    <div class="layui-container">
+        <div class="intro">
+            <span class="first"><i class="layui-icon layui-icon-house-shield"></i>7天无理由退换货</span>
+            <span class="second"><i class="layui-icon layui-icon-house-car"></i>满99元全场包邮</span>
+            <span class="third"><i class="layui-icon layui-icon-house-diamond"></i>100%品质保证</span>
+            <span class="last"><i class="layui-icon layui-icon-house-tel"></i>客服000-0000-000</span>
+        </div>
+        <div class="about">
+      <span class="layui-breadcrumb" lay-separator="|">
+        <a href="about.html">关于我们</a>
+        <a href="about.html">帮助中心</a>
+        <a href="about.html">售后服务</a>
+        <a href="about.html">配送服务</a>
+        <a href="about.html">关于货源</a>
+      </span>
+            <p>©Web-大作业</p>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 主要是配置SQL的映射，将SQL代码和java分离，便于维护 -->
+
+<mapper namespace="com.mall.app.dao.UserMapper">
+    <insert id="insert">
+		insert into `user`(username,phone_number,nickname,password,`type`,sex)
+		values(#{user.username,jdbcType=VARCHAR},#{user.phoneNumber,jdbcType=VARCHAR},
+		#{user.nickname,jdbcType=VARCHAR},#{user.password,jdbcType=VARCHAR},#{user.type,jdbcType=VARCHAR},#{user.sex,jdbcType=VARCHAR})
+	</insert>
+    <select id="login" resultType="com.mall.app.bean.User">
+	SELECT
+		user_id AS userId, 
+		username,
+		`password`,
+		type ,
+		phone_number AS phoneNumber,
+		nickname,
+		sex,
+		img
+	FROM 
+		`user`
+	WHERE 
+		username = #{username}
+	 </select>
+	 <update id="updateInfo">
+	 update user set nickname=#{nickname},phone_number=#{phone_number},sex=#{sex}
+	 where username=#{username}
+	 </update>
+	 <update id="uploadImg">
+	 update user set img=#{img}
+	 where username=#{username}
+	 </update>
+	 
+	 	<!-- 查询用户数 -->
+	<select id="getCountUser" resultType="int">
+		select count(*) from user
+		<where>
+		<if test="type!=null and (type==0 or type==1 or type==2)">
+		 type = #{type}
+		</if>
+		</where>
+	</select>
+
+	<!-- 查询用户信息 -->
+	<select id="listUser" resultType="com.mall.app.bean.User">
+		select 
+		user_id as userId,
+        username as userName,
+        phone_number as phoneNumber,
+        nickname as nickName,
+        password,
+        type,
+        sex
+        
+        from `user`
+        <where>
+        <if test="type!=null and (type==0 or type==1 or type==2)">
+         type = #{type}
+        </if>
+        </where>
+
+		limit #{page},#{size}
+	</select>
+	 
+</mapper>

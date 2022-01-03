@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" href="../res/layui/css/layui.css">
+</head>
+<body>
+	<table id="address-table" lay-filter="address-table"></table>
+	<div>
+		&emsp;&emsp;支付方式：&emsp;<input type="radio" checked value="在线支付">&emsp;在线支付
+	</div>
+	<script type="text/html" id="toolbar1" lay-filter="toolbar1">
+ 	 <div class="layui-btn-container">
+ 	   <button class="layui-btn layui-btn-sm" lay-event="getCheckData">确定</button>
+ 	 </div>
+	</script>
+	
+	<script src="../res/layui/layui.js"></script>
+	<script>
+	var datas;
+		layui.use(['table','jquery'], function(){
+		  var table = layui.table;
+		  //第一个实例
+		  table.render({
+		    elem: '#address-table'
+		    ,skin: "line"
+		    ,url: '/user/address/listPageAddress' //数据接口
+		    ,page: true //开启分页
+		    ,cols: [[ //表头
+			      {type:'radio',field: 'address_id', width:'10%', sort: true, fixed: 'left'}
+			      ,{field: 'name',    title : '收货人'}
+			      ,{field: 'phone_number', title: '手机号', width:'25%'}
+			      ,{title : '地址',width : '50%',templet : function(val) {
+					return val.province+val.city+val.county+val.address_detail;}}
+			    ]]
+		  });
+		  
+		  table.on('toolbar("toolbar1")', function(obj){
+			    var checkStatus = table.checkStatus(obj.config.id);
+			    
+			    if(obj.event == 'getCheckData'){
+			    	console.info("1111");
+			        var data = checkStatus.data;
+			        console.info(data);
+			    };
+		  });
+		  table.on('radio(address-table)', function(obj){
+				datas = obj.data.address_id;
+		  });
+		  var callbackdata = function () {
+			  return datas;
+		  }
+		});
+		
+	</script>
+
+</body>
+</html>

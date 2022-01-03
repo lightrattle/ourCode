@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+ <mapper namespace="com.mall.app.dao.UserOrderMapper">
+  <select id="listUserOrder" resultType="java.util.HashMap">
+    SELECT
+		order_id AS orderId,
+		`order`.product_id AS productId,
+		product_num AS productNum,
+		product_name AS productName,
+		`order`.price AS price,
+		buyer_id AS buyerId,
+		`order`.seller_id AS sellerId,
+		order_time AS orderTime,
+		buyer_addr AS buyerAddr,
+		`order`.seller_addr AS sellerAddr,
+		logistic_id AS logisticId,
+		`status` AS status
+	FROM
+		`order` 
+	LEFT JOIN
+		product
+	ON
+		`order`.product_id = product.product_id
+	WHERE
+		buyer_id=#{buyerId}
+  </select>
+  <select id="listUserOrderByStatus" resultType="java.util.HashMap">
+    SELECT
+		order_id AS orderId,
+		`order`.product_id AS productId,
+		product_num AS productNum,
+		product_name AS productName,
+		`order`.price AS price,
+		buyer_id AS buyerId,
+		`order`.seller_id AS sellerId,
+		order_time AS orderTime,
+		buyer_addr AS buyerAddr,
+		`order`.seller_addr AS sellerAddr,
+		logistic_id AS logisticId,
+		`status` AS status
+	FROM
+		`order` 
+	LEFT JOIN
+		product
+	ON
+		`order`.product_id = product.product_id
+	WHERE
+		buyer_id=#{buyerId} AND status=#{status}
+
+  </select>
+  
+  <select id="getLogisticName" resultType="String">
+  	SELECT
+  		com_name
+  	FROM
+  		logistic_com
+  	WHERE
+  		logistic_id = #{logisticId}
+  </select>
+   
+  <select id="getOrderNumByStatus" resultType="int">
+  	SELECT
+  		COUNT(*)
+  	FROM
+  		`order` 
+  	WHERE
+		buyer_id=#{buyerId} AND status=#{status}
+  </select>
+  
+  <select id="getOrderNum" resultType="int">
+  	SELECT
+  		COUNT(*)
+  	FROM
+  		`order` 
+  	WHERE
+		buyer_id=#{buyerId}
+  </select>
+  
+  <update id="userReceiveOrder">
+  	UPDATE `order` SET `status`=2 WHERE order_id=#{orderId} AND `status`=1 AND buyer_id=#{buyerId}
+  </update>
+	 	 
+</mapper>

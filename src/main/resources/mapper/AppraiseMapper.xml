@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.mall.app.dao.AppraiseMapper">
+
+	<select id="listAppraise" resultType="com.mall.app.bean.Appraise"
+		resultSetType="FORWARD_ONLY">
+		select
+		product.product_id AS productId,
+		app_detail
+		from product,appraise
+		where appraise.product_id=product.product_id and appraise.product_id=#{productId}
+	</select>
+	<insert id="addAppraise">
+	insert appraise(product_id,user_id,app_detail) values(#{productId},#{userId},#{app_detail});
+	</insert>
+</mapper>

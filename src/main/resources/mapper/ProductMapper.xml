@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mall.app.dao.ProductMapper">
+
+	<!-- 添加商品 -->
+	<insert id="addProduct">
+		insert into
+		product(seller_id, product_type_id,
+		product_name,
+		product_image, price, discount_price,
+		storage, sale, state,
+		create_time,modify_time,product_describe)
+
+		values(#{sellerId}, #{productTypeId} , #{productName}
+		, #{productImage}, #{price}, #{discountPrice}
+		, #{storage}, #{sale}, #{state}
+		, #{createTime}, #{modifyTime},#{productDescribe} )
+	</insert>
+
+	<!-- 删除商品 -->
+	<delete id="removeProduct">
+		delete from product where product_id in
+		<foreach item="item" index="index" collection="array" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+
+	<!-- 更新商品 -->
+	<update id="updateProduct">
+		update product set
+		seller_id = #{sellerId},
+		product_type_id = #{productTypeId},
+		product_name = #{productName},
+		product_image = #{productImage},
+		price = #{price},
+		discount_price =
+		#{discountPrice},
+		storage = #{storage},
+		sale = #{sale},
+		state = #{state},
+		create_time = #{createTime},
+		modify_time = #{modifyTime},
+		product_describe = #{productDescribe}
+
+		where product_id = #{productId}
+	</update>
+
+	<!-- 查询商品数 -->
+	<select id="getCountProduct" resultType="int">
+		select count(*) from
+
+		product
+		where 1=1
+		<if test="sellerId != null">
+			and
+			seller_id = #{sellerId}
+		</if>
+		</select>
+
+	<!-- 查询商品信息 -->
+	<select id="listProduct" resultType="com.mall.app.bean.Product">
+		select
+		product_id as productId,
+		seller_id as sellerId,
+		product.product_type_id as productTypeId,
+		product_type_name as productTypeName,
+		product_name as productName,
+		product_image as productImage,
+		price as
+		price,
+		discount_price as discountPrice,
+		storage ,
+		sale ,
+		state ,
+		create_time as createTime,
+		modify_time as modifyTime,
+		product_describe as productDescribe
+		from product left join product_type
+		on product.product_type_id = product_type.product_type_id
+		<where>
+			
+			<if test="productTypeId!=null">
+				product.product_type_id = #{productTypeId}
+			</if>
+			and
+			seller_id = #{sellerId}
+		</where>
+		limit #{page},#{size}
+	</select>
+
+	<!-- 修改商品状态 -->
+	<update id="setProductState">
+		update product set state = #{state}
+		where product_id = #{productId}
+	</update>
+
+	<!-- 修改商品库存 -->
+	<update id="setProductStorage">
+		update product set storage = storage + #{storage}
+		where product_id = #{productId}
+	</update>
+	
+	<!-- 修改商品图片 -->
+	<update id="updateProductPic">
+		update product set product_image = #{productImage}
+		where product_id = #{productId}
+	</update>
+
+</mapper>

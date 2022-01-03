@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mall.app.dao.AddressMapper">
+
+	<select id="getCountAddress" resultType="int">
+		select count(*)
+		from
+		address where user_id=#{user_id}
+	</select>
+
+	<select id="listPageAddress" resultType="com.mall.app.bean.Address">
+		select * from address
+		where  user_id=#{user_id}
+		limit #{page} ,#{size}
+	</select>
+
+	<insert id="saveAddress">
+		insert into address
+		(user_id,phone_number,name,province,city,county,address_detail)
+		values(#{user_id},#{phone_number},#{name},#{province},#{city},#{county},#{address_detail})
+	</insert>
+
+	<update id="updateAddress">
+		update address set
+		phone_number=#{phone_number},
+		name=#{name},
+		province=#{province},
+		city=#{city},
+		county=#{county},
+		address_detail=#{address_detail}
+		where address_id=#{address_id}
+	</update>
+	
+	<delete id="removeAddress">
+		delete from address where address_id=#{address_id}
+		
+	</delete>
+    <select id="selectAddress" resultType="com.mall.app.bean.Address">
+		select * from address where address_id = #{id}
+	</select>
+</mapper>

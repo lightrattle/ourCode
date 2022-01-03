@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.mall.app.dao.CollectMapper">
+
+	<select id="listCollect" resultType="com.mall.app.bean.Collect"
+		resultSetType="FORWARD_ONLY">
+		select
+		product.product_id AS productId,
+		product.seller_id AS sellerId,
+		product.product_type_id AS productTypeId,
+		product.product_name AS productName,
+		product.product_image AS productImage,
+		price,
+		product.discount_price AS discountPrice,
+		storage,
+		sale,
+		state,
+		product.create_time AS createTime,
+		product.modify_time AS modifyTime
+		from collect,product,user
+		where user.user_id=collect.user_id and
+		collect.product_id=product.product_id and username=#{username}
+	</select>
+	<insert id="addCollect">
+	insert collect(product_id,user_id) values(#{productId},#{userId});
+	</insert>
+    <delete id="removeCollect">
+		delete from collect where product_id = #{productId,jdbcType=INTEGER} and user_id=#{userId,jdbcType=INTEGER}
+	</delete>
+</mapper>

@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width">
+    <title>index-ByLiao</title>
+    <link rel="stylesheet" href="CSS/Liaocss.css">
+    <script src="JS/jQuery-3.min.js"></script>
+    <script src="JS/liaoJS.js"></script>
+</head>
+<body>
+    <div class="ROOT">
+        <div><!--右侧浮动跳转商城模块-->
+            <div style="z-index:999; display: block; position: fixed; right: 0px; top: 0px;">
+                <div id="login_title">
+                    <b>跳转在线商城</b>
+                </div>
+                <div class="content"><!--跳转商城模块-->
+                    <div class="login_style" onclick="login_exchange()">
+                        <p> </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div><!--左侧浮动天气预报模块-->
+            <div style="z-index:999; display: block; position: fixed; left: 0px; bottom: 0px;">
+                <div id="forecast_title">
+                    <b>天气预报</b>
+                </div>
+                <div class="content"><!--天气预报模块-->
+                    <div class="weather_forecast">
+                        <p class="location"></p>
+                        <img class="w_img" src="" alt="">
+                        <span class="min-tem"></span><span class="zhi">~</span><span class="max-tem"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="background0">
+            <div class="content">
+                <div class="stars"></div>
+            </div>
+            <div class="title">
+                <img src="Images/title.png" alt="首页">
+            </div>
+            <div><!--搜索框模块-->
+                <div class="search">
+                    <form method="get" class="search-detail">
+                        <input type="text" class="search-text" id="search-info" placeholder="搜索" value="">
+                        <input type="button" class="search-btn" value="" onclick="choose_search()">
+                    </form>
+                </div>
+            </div>
+            <div class="nav"><!--导航栏模块-->
+                <table>
+                    <td>
+                        <tr><a href="OneByWu.html" onmouseover="inAjax(1)">资讯</a></tr>
+                        <tr><a href="OneByHe.html" onmouseover="inAjax(2)">美食</a></tr>
+                        <tr><a href="OneByLiu.html" onmouseover="inAjax(3)">游戏</a></tr>
+                        <tr><a href="OneByWei.html" onmouseover="inAjax(4)">影视</a></tr>
+                        <tr><a href="https://cn.bing.com/" onmouseover="inAjax(5)">更多</a></tr>
+                    </td>
+                </table>
+            </div>
+            <div class="iFrame"><!--内嵌网页模块-->
+                <div id = "iFrame"></div>
+                <script>
+                    document.getElementById("iFrame").innerHTML
+                    ='<iframe src="OneByWu.html" width= "980px" height= "200px"></iframe>';
+                </script>
+            </div>
+            <div class="lunbo">
+                <div class="container">
+                    <img class="on" src="Images/building1.jpg" alt=""/>
+                    <img src="Images/building2.jpg" alt=""/>
+                    <img src="Images/building3.jpg" alt=""/>
+                    <div class="left">
+                        <div onclick="Myclick()">
+                            &lt;
+                        </div>
+                    </div>
+                    <div class="right">
+                        <div onclick="Myclick()">
+                            &gt;
+                        </div>
+                    </div>
+                </div>
+                <script>
+                    var aImgs = document.querySelectorAll('.container img'); 
+                    var btnLeft = document.querySelector('.container .left');
+                    var btnRight = document.querySelector('.container .right');
+                    var index_now = 0;
+                    var index_last = 0;
+                    btnRight.onclick = function () {
+                        index_last = index_now;
+                        aImgs[index_last].className = '';
+                        index_now++;
+                        index_now %= aImgs.length;
+                        aImgs[index_now].className = 'on';
+                    }
+                    btnLeft.onclick = function () {
+                        index_last = index_now;
+                        aImgs[index_last].className = '';
+                        index_now--;
+                        if (index_now < 0) {
+                            index_now = aImgs.length - 1;
+                        }
+                        aImgs[index_now].className = 'on';
+                    }
+                    setInterval(function(){
+                        index_last = index_now;
+                        aImgs[index_last].className = '';
+                        index_now++;
+                        index_now %= aImgs.length;
+                        aImgs[index_now].className = 'on';
+                    }, 2000);
+                </script>
+            </div>
+            <div>
+                <form class="form">
+                    <span class="form_title">个人信息</span>
+                    <label class="form_label">
+                        <span>姓名：</span>
+                        <input type="text" value="廖睿">
+                    </label>
+                    <label class="form_label"><span>班级：</span>
+                        <input type="text" value="计算机科学与技术(软件方向)192班">
+                    </label>
+                    <label class="form_label"><span>学号：</span>
+                        <input type="text" value="6109119089">
+                    </label>
+                    <label class="form_label"><span>课程名称：</span>
+                        <input type="text" value="HTML网页前端设计">
+                    </label>
+                    <div class="form_submit">
+                        <input class="btn" type="button" value="提交"  onclick="Myclick()"/>
+                        <input class="back" type="button" value="首页"  onclick="Myclick()"/>
+                    </div>
+                </form>
+                <br><br><br><br>
+            </div>
+            <div class="footer"><!--页脚备注模块-->
+                <h3>---------没有更多了---------</h3>
+            </div>
+        </div>
+        <div><!--右侧浮动广告模块模块-->
+            <div style="z-index:999; display: block; position: fixed; right: 0px; bottom: 100px;">
+                <div id="ad_title" style="text-align: right;">
+                    <a  onclick="Myclick()"><b>点击关闭X</b></a>
+                </div>
+                <div class="content"><!--广告模块-->
+                    <img src="Images/ad_game.gif" alt="X">
+                </div>
+            </div>
+        </div>
+        <audio id="clickMusic">
+            <source src="Media/click.mp3" type="audio/mp3">
+        </audio>
+    </div>
+    <script>
+        $.ajax({
+       url:"https://free-api.heweather.net/s6/weather/forecast?location=南昌&key=c583b96020544a139b61fc277ce8509d",
+       method:"get",
+       success:function(res){
+            var location=res.HeWeather6[0].basic.location;
+            var cond_txt=res.HeWeather6[0].daily_forecast[0].cond_txt_d;
+            var min_tem=res.HeWeather6[0].daily_forecast[0].tmp_min;
+            var max_tem=res.HeWeather6[0].daily_forecast[0].tmp_max;
+            $(".location").html(location); 
+            switch(cond_txt){
+                case  '多云':  
+                $(".w_img").attr("src","https://cdn.heweather.com/cond_icon/101.png")
+                break;
+                case  '晴':  
+                $(".w_img").attr("src","https://cdn.heweather.com/cond_icon/100.png")
+                break;
+                case  '小雨':  
+                $(".w_img").attr("src","https://cdn.heweather.com/cond_icon/305.png")
+                break;
+                case  '大雨':  
+                $(".w_img").attr("src","https://cdn.heweather.com/cond_icon/307.png")
+                break;
+                case  '中雨':  
+                $(".w_img").attr("src","https://cdn.heweather.com/cond_icon/306.png")
+                break;
+                case '阵雨' :  
+                $(".w_img").attr("src","https://cdn.heweather.com/cond_icon/300.png")
+                break;
+                case '强阵雨' :  
+                $(".w_img").attr("src","https://cdn.heweather.com/cond_icon/301.png")
+                break;
+                case '小雪' :  
+                $(".w_img").attr("src","https://cdn.heweather.com/cond_icon/400.png")
+                break;
+                case '中雪' :  
+                $(".w_img").attr("src","https://cdn.heweather.com/cond_icon/401.png")
+                break;
+                case '大雪' :  
+                $(".w_img").attr("src","https://cdn.heweather.com/cond_icon/402.png")
+                break;
+                case '大暴雨' :  
+                $(".w_img").attr("src","https://cdn.heweather.com/cond_icon/311.png")
+                break;
+                default:
+                $(".w_img").attr("src","https://cdn.heweather.com/cond_icon/101.png")
+            }
+            $(".min-tem").html(min_tem+"°c");
+            $(".max-tem").html(max_tem+"°c"); 
+        },
+        error:function(el){
+            console.log(el)
+        }
+    })
+    </script>
+</body>
+</html>

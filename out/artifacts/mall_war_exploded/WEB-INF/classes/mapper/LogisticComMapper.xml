@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.mall.app.dao.LogisticComMapper">
+
+	<!-- 添加物流公司 -->
+	<insert id="addLogisticCom">
+		insert into
+		logistic_com(com_name)
+		values(#{comName})
+	</insert>
+
+	<!-- 删除物流公司 -->
+	<delete id="removeLogisticCom">
+		delete from logistic_com where logistic_id in
+		<foreach item="item" index="index" collection="array" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+
+	<!-- 更新物流公司 -->
+	<update id="updateLogisticCom">
+		update logistic_com set
+		com_name = #{comName}
+		where logistic_id = #{logisticId}
+	</update>
+
+	<!-- 查询物流公司数 -->
+	<select id="getCountLogisticCom" resultType="int">
+		select count(*) from
+		logistic_com
+	</select>
+
+	<!-- 查询物流公司信息 -->
+	<select id="listLogisticCom" resultType="com.mall.app.bean.LogisticCom">
+		select 
+		logistic_id as logisticId,
+        com_name as comName
+        
+        from logistic_com
+		<if test="page!=null and page!=size">
+        limit #{page},#{size}
+        </if>
+	</select>
+
+</mapper>

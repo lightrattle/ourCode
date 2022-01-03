@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mall.app.dao.ProductTypeMapper">
+
+	<!-- 添加商品类别 -->
+	<insert id="addProductType">
+		insert into
+		product_type(product_type_name)
+		values(#{productTypeName})
+	</insert>
+
+	<!-- 删除商品类别 -->
+	<delete id="removeProductType">
+		delete from product_type where product_type_id in
+		<foreach item="item" index="index" collection="array" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+
+	<!-- 更新商品类别 -->
+	<update id="updateProductType">
+		update product_type set
+		product_type_name=#{productTypeName}
+		where product_type_id=#{productTypeId}
+	</update>
+
+	<!-- 查询商品类别数 -->
+	<select id="getCountProductType" resultType="int">
+		select count(*) from
+		product_type
+	</select>
+
+	<!-- 查询商品类别信息 -->
+	<select id="listProductType" resultType="com.mall.app.bean.ProductType">
+		select product_type_id as productTypeId,
+        product_type_name as productTypeName
+        from product_type
+		<if test="page!=null and page!=size">
+        limit #{page},#{size}
+        </if>
+	</select>
+
+</mapper>

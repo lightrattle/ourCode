@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mall.app.dao.GoodsMapper">
+
+	<select id="getCountGoods" resultType="int">
+		select count(gid)
+		from
+		tb_goods where deleted=0
+	</select>
+
+	<select id="listPageGoods" resultType="com.mall.app.bean.Goods">
+		select * from tb_goods
+		<where>
+			<if test="gname!=null and gname!=''">
+				gname like '%${gname}%'
+			</if>
+			AND deleted=0
+		</where>
+		limit #{page} ,#{size}
+	</select>
+
+	<insert id="saveGoods">
+		insert into tb_goods
+		(gname,price,quantity,gdesc,cateid,create_time)
+		values(#{gname},#{price},
+		#{quantity},
+		#{gdesc},#{cateid},
+		#{createTime})
+	</insert>
+	
+	<select id="selectGoods"  resultType="com.mall.app.bean.Goods">
+		select *
+		from
+		product where product_id=#{product_id}
+	</select>
+ 	<insert id="insertOrder">
+ 		insert into `order` (product_id,product_num,price,buyer_id,seller_id,buyer_addr,order_time) value(#{product_id},#{product_num},#{price},#{buyer_id},#{seller_id},#{buyer_addr},#{order_time})
+ 	</insert>
+ 	<update id="updateProductNum">
+ 		update product set storage = storage-#{number}, sale = sale+#{number} where product_id=#{productId}
+ 	</update>
+	<update id="updateGoodsOfSale">
+		update product set sale=sale+#{getProductNum} ,storage=storage-#{getProductNum} where product_id=#{productId}
+	</update>
+</mapper>

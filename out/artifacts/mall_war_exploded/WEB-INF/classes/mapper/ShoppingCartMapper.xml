@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mall.app.dao.ShoppingCartMapper">
+
+	<select id="findifexist" resultType="int">
+		select count(*)
+		from
+		shopping_cart where product_id=#{productId} and buyer_id=#{buyerId}
+	</select>
+	
+	<insert id="saveShoppingCart">
+		insert into shopping_cart
+		(product_id,buyer_id,price,num) values(#{productId},#{buyerId},#{price},#{num})
+	</insert>
+
+	<update id="updateShoppingCart">
+		update shopping_cart set
+		num=num+#{num}
+		where product_id=#{productId} and buyer_id=#{buyerId}
+	</update>
+
+	<select id="getCountShoppingCart" resultType="int">
+		select count(*)
+		from
+		shopping_cart s left join product p on
+		s.product_id=p.product_id
+		where buyer_id=#{buyer_id}
+	</select>
+	<select id="listShoppingCart" resultMap="shoppingCartMapper">
+		select  s.*, p.*,p.price pprice
+		from
+		shopping_cart s left join product p on
+		s.product_id=p.product_id
+		where  buyer_id=#{buyer_id}
+	</select>
+		<delete id="removeShoppingCart">
+		delete from shopping_cart 
+		where product_id=#{productId} and buyer_id=#{buyerId}
+	</delete>
+
+	<resultMap type="com.mall.app.bean.ShoppingCart" id="shoppingCartMapper">
+		<id property="productId" column="product_id" />
+		<id property="buyerId" column="buyer_id" />
+		<result property="price" column="price" />
+		<result property="pprice" column="pprice" />
+		<result property="num" column="num" />
+		<association property="goods" javaType="com.mall.app.bean.Goods">
+			<id property="product_id" column="product_id" />
+			<result property="product_name" column="product_name" />
+			<result property="product_image" column="product_image" />
+			<result property="price" column="price" />
+			<result property="discount_price" column="discount_price" />
+		</association>
+	</resultMap>
+
+</mapper>

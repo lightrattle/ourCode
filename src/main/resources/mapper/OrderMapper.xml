@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.mall.app.dao.OrderMapper">
+
+	<!-- 添加订单信息 -->
+	<insert id="addOrder">
+		insert into
+		`order`(product_id, product_num, price,
+		buyer_id, seller_id, buyer_addr,
+		seller_addr, logistic_id,order_time);
+		values(#{productId}, #{productNum}, #{price},
+		#{buyerId}, #{sellerId}, #{buyerAddr},
+		#{sellerAddr}, #{logisticId},#{order_time})
+	</insert>
+
+	<!-- 删除订单信息 -->
+	<delete id="removeOrder">
+		delete from `order` where order_id in
+		<foreach item="item" index="index" collection="array" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+
+	<!-- 更新订单信息 -->
+	<update id="updateOrder">
+		update `order` set
+
+		product_id = #{productId},
+		product_num = #{productNum},
+		price = #{price},
+		buyer_id = #{buyerId},
+		seller_id = #{sellerId},
+		buyer_addr = #{buyerAddr},
+		seller_addr = #{sellerAddr},
+		logistic_id = #{logisticId},
+		`status` = #{status}
+
+		where
+		order_id = #{orderId}
+	</update>
+
+	<!-- 查询订单数量 -->
+	<select id="getCountOrder" resultType="int">
+		select count(*) from `order`
+		<where>
+			<if test=" sellerId!=0 ">
+				seller_id = #{sellerId}
+			</if>
+		</where>
+	</select>
+
+	<!-- 查询订单信息 -->
+	<select id="listOrder" resultType="com.mall.app.bean.Order">
+		select
+		order_id as orderId,
+		`order`.product_id as productId,
+		product_num as productNum,
+		product_name as productName,
+		price as price,
+		buyer_id as
+		buyerId,
+		seller_id as sellerId,
+		order_time as orderTime,
+		buyer_addr as
+		buyerAddr,
+		(select CONCAT(province,city,county,address_detail) addressname from address where address_id=buyerAddr) buyerAddrName,
+		seller_addr as sellerAddr,
+		`order`.logistic_id as logisticId,
+		com_name as comName,
+		`status` as status
+
+		from `order` , logistic_com,
+		(select DISTINCT product.product_name,product.product_id	from product,`order`
+		 where product.product_id = `order`.product_id) as pp
+		 
+		 where `order`.product_id=pp.product_id and `order`.logistic_id=logistic_com.logistic_id
+			and seller_id = #{sellerId}
+		limit #{page},#{size}
+	</select>
+
+	<!-- 查询订单状态 -->
+	<select id="getOrderStatus" resultType="int">
+		select `status` as status from `order`
+		where order_id = #{orderId}
+	</select>
+
+</mapper>
